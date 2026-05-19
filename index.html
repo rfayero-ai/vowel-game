@@ -7,243 +7,71 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
   --ii-text: #1a6b4a; --ii-bg: #e8f7f1; --ii-border: #57c49a; --ii-drop: #c2f0dd;
   --eh-text: #7c3200; --eh-bg: #fff0e6; --eh-border: #f5944a; --eh-drop: #ffd8b8;
   --ih-text: #2b2d8e; --ih-bg: #eeeeff; --ih-border: #8889e8; --ih-drop: #d4d5ff;
-  --surface: #f5f3ee;
-  --card: #ffffff;
-  --neutral: #3a3a3a;
-  --muted: #999;
-  --border: #e2dfd8;
+  --surface: #f5f3ee; --card: #ffffff; --neutral: #3a3a3a; --muted: #999; --border: #e2dfd8;
 }
-
-body {
-  font-family: 'Sora', sans-serif;
-  background: var(--surface);
-  color: var(--neutral);
-  min-height: 100vh;
-  padding: 2rem 1rem 5rem;
-}
-
-header {
-  max-width: 860px;
-  margin: 0 auto 2rem;
-  text-align: center;
-}
-header h1 {
-  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: #111;
-  margin-bottom: 0.3rem;
-}
+body { font-family: 'Sora', sans-serif; background: var(--surface); color: var(--neutral); min-height: 100vh; padding: 2rem 1rem 5rem; }
+header { max-width: 860px; margin: 0 auto 2rem; text-align: center; }
+header h1 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 700; letter-spacing: -0.03em; color: #111; margin-bottom: 0.3rem; }
 header p { font-size: 0.9rem; color: var(--muted); font-weight: 300; }
-
-.scoreboard {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  max-width: 860px;
-  margin: 0 auto 2rem;
-  flex-wrap: wrap;
-}
-.stat {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 0.6rem 1.4rem;
-  text-align: center;
-  min-width: 90px;
-}
+.scoreboard { display: flex; justify-content: center; gap: 1rem; max-width: 860px; margin: 0 auto 2rem; flex-wrap: wrap; }
+.stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 0.6rem 1.4rem; text-align: center; min-width: 90px; }
 .stat-val { font-size: 1.4rem; font-weight: 700; font-family: 'DM Mono', monospace; color: #111; }
 .stat-lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-top: 2px; }
-
-.bank-label {
-  max-width: 860px;
-  margin: 0 auto 0.6rem;
-  font-size: 0.78rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--muted);
-}
-.word-bank {
-  max-width: 860px;
-  margin: 0 auto 2.5rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  background: var(--card);
-  border: 1.5px dashed var(--border);
-  border-radius: 16px;
-  padding: 1.2rem 1.4rem;
-  min-height: 80px;
-}
+.bank-label { max-width: 860px; margin: 0 auto 0.6rem; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+.word-bank { max-width: 860px; margin: 0 auto 2.5rem; display: flex; flex-wrap: wrap; gap: 10px; background: var(--card); border: 1.5px dashed var(--border); border-radius: 16px; padding: 1.2rem 1.4rem; min-height: 80px; }
 .word-bank.drag-over { background: #f0ede6; border-color: #bbb; }
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: 999px;
-  padding: 7px 14px 7px 10px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #111;
-  cursor: grab;
-  user-select: none;
-  transition: box-shadow 0.15s, transform 0.15s, opacity 0.15s;
-  touch-action: none;
-}
+.chip { display: inline-flex; align-items: center; gap: 8px; background: var(--card); border: 1.5px solid var(--border); border-radius: 999px; padding: 7px 14px 7px 10px; font-size: 0.95rem; font-weight: 600; color: #111; cursor: grab; user-select: none; transition: box-shadow 0.15s, transform 0.15s, opacity 0.15s; touch-action: none; }
 .chip:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.12); transform: translateY(-1px); }
 .chip.dragging { opacity: 0.3; cursor: grabbing; }
 .chip.correct { background: var(--ii-bg); border-color: var(--ii-border); color: var(--ii-text); }
-.chip.wrong   { background: #fff0f0; border-color: #f5a0a0; color: #a32d2d; }
-
-.chip-play {
-  background: #f0ede6;
-  border: none;
-  border-radius: 50%;
-  width: 26px; height: 26px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  font-size: 0.75rem;
-  flex-shrink: 0;
-  transition: background 0.12s;
-}
+.chip.wrong { background: #fff0f0; border-color: #f5a0a0; color: #a32d2d; }
+.chip-play { background: #f0ede6; border: none; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75rem; flex-shrink: 0; transition: background 0.12s; }
 .chip-play:hover { background: #dedad0; }
-
-.columns {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  max-width: 860px;
-  margin: 0 auto;
-}
+.columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 860px; margin: 0 auto; }
 @media (max-width: 580px) { .columns { grid-template-columns: 1fr; } }
-
-.column {
-  border-radius: 16px;
-  border: 2px dashed var(--border);
-  padding: 1rem;
-  min-height: 240px;
-  transition: background 0.15s, border-color 0.15s;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+.column { border-radius: 16px; border: 2px dashed var(--border); padding: 1rem; min-height: 240px; transition: background 0.15s, border-color 0.15s; display: flex; flex-direction: column; gap: 8px; }
 .column[data-sound="ii"] { border-color: var(--ii-border); background: #f9fffe; }
 .column[data-sound="eh"] { border-color: var(--eh-border); background: #fffbf8; }
 .column[data-sound="ih"] { border-color: var(--ih-border); background: #fafaff; }
 .column.drag-over[data-sound="ii"] { background: var(--ii-drop); border-style: solid; }
 .column.drag-over[data-sound="eh"] { background: var(--eh-drop); border-style: solid; }
 .column.drag-over[data-sound="ih"] { background: var(--ih-drop); border-style: solid; }
-
-.col-header {
-  font-family: 'DM Mono', monospace;
-  font-size: 1.1rem;
-  font-weight: 700;
-  text-align: center;
-  padding-bottom: 0.5rem;
-  border-bottom: 1.5px solid;
-  margin-bottom: 2px;
-}
+.col-header { font-family: 'DM Mono', monospace; font-size: 1.1rem; font-weight: 700; text-align: center; padding-bottom: 0.5rem; border-bottom: 1.5px solid; margin-bottom: 2px; }
 .col-header[data-sound="ii"] { color: var(--ii-text); border-color: var(--ii-border); }
 .col-header[data-sound="eh"] { color: var(--eh-text); border-color: var(--eh-border); }
 .col-header[data-sound="ih"] { color: var(--ih-text); border-color: var(--ih-border); }
-
 .col-example { text-align: center; font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; font-style: italic; }
-
 .col-drop-zone { flex: 1; display: flex; flex-direction: column; gap: 7px; }
-
 .col-empty { font-size: 0.75rem; color: #ccc; text-align: center; margin-top: 1rem; font-style: italic; }
-
-.column .chip {
-  width: 100%;
-  border-radius: 10px;
-  justify-content: flex-start;
-}
-
-.actions {
-  max-width: 860px;
-  margin: 2rem auto 0;
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-.btn {
-  font-family: 'Sora', sans-serif;
-  font-size: 0.88rem;
-  font-weight: 600;
-  padding: 10px 26px;
-  border-radius: 10px;
-  border: 1.5px solid var(--border);
-  background: var(--card);
-  color: var(--neutral);
-  cursor: pointer;
-  transition: background 0.15s;
-}
+.column .chip { width: 100%; border-radius: 10px; justify-content: flex-start; }
+.actions { max-width: 860px; margin: 2rem auto 0; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+.btn { font-family: 'Sora', sans-serif; font-size: 0.88rem; font-weight: 600; padding: 10px 26px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--card); color: var(--neutral); cursor: pointer; transition: background 0.15s; }
 .btn:hover { background: #eae7de; }
 .btn.primary { background: #111; color: #fff; border-color: #111; }
 .btn.primary:hover { background: #333; }
-
-.result-banner {
-  max-width: 860px;
-  margin: 1.5rem auto 0;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1.2rem 1.5rem;
-  text-align: center;
-  display: none;
-}
+.result-banner { max-width: 860px; margin: 1.5rem auto 0; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.2rem 1.5rem; text-align: center; display: none; }
 .result-banner.show { display: block; }
 .result-banner strong { font-size: 1.05rem; }
 .result-banner p { font-size: 0.88rem; color: var(--muted); margin-top: 6px; }
-
-#drag-ghost {
-  position: fixed;
-  pointer-events: none;
-  z-index: 9999;
-  display: none;
-  padding: 7px 18px;
-  background: #fff;
-  border: 1.5px solid #ccc;
-  border-radius: 999px;
-  font-family: 'Sora', sans-serif;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #111;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
-  transform: rotate(2deg) scale(1.05);
-}
+#drag-ghost { position: fixed; pointer-events: none; z-index: 9999; display: none; padding: 7px 18px; background: #fff; border: 1.5px solid #ccc; border-radius: 999px; font-family: 'Sora', sans-serif; font-weight: 600; font-size: 0.95rem; color: #111; box-shadow: 0 4px 16px rgba(0,0,0,0.18); transform: rotate(2deg) scale(1.05); }
 </style>
 </head>
 <body>
-
 <header>
   <h1>Listen &amp; Drag</h1>
   <p>Press <strong>▶</strong> to hear the word, then drag it to the correct vowel column.</p>
 </header>
-
 <div class="scoreboard">
   <div class="stat"><div class="stat-val" id="s-correct">0</div><div class="stat-lbl">Correct</div></div>
   <div class="stat"><div class="stat-val" id="s-wrong">0</div><div class="stat-lbl">Wrong</div></div>
   <div class="stat"><div class="stat-val" id="s-left">18</div><div class="stat-lbl">Remaining</div></div>
 </div>
-
 <div class="bank-label">Word bank — drag each word into its vowel column</div>
-<div class="word-bank" id="word-bank"
-  ondragover="onDragOver(event,'bank')"
-  ondragleave="onDragLeave(event,'bank')"
-  ondrop="onDrop(event,'bank')">
-</div>
-
+<div class="word-bank" id="word-bank" ondragover="onDragOver(event,'bank')" ondragleave="onDragLeave(event,'bank')" ondrop="onDrop(event,'bank')"></div>
 <div class="columns">
   <div class="column" data-sound="ii" ondragover="onDragOver(event,'ii')" ondragleave="onDragLeave(event,'ii')" ondrop="onDrop(event,'ii')">
     <div class="col-header" data-sound="ii">/iː/</div>
@@ -261,19 +89,15 @@ header p { font-size: 0.9rem; color: var(--muted); font-weight: 300; }
     <div class="col-drop-zone" id="zone-ih"><div class="col-empty">Drop here</div></div>
   </div>
 </div>
-
 <div class="result-banner" id="result-banner">
   <strong id="result-title"></strong>
   <p id="result-msg"></p>
 </div>
-
 <div class="actions">
   <button class="btn primary" onclick="checkAll()">✓ Check answers</button>
   <button class="btn" onclick="resetActivity()">↺ Restart</button>
 </div>
-
 <div id="drag-ghost"></div>
-
 <script>
 const words = [
   { word: "beat",  ipa: "/biːt/",  sound: "ii" },
@@ -295,245 +119,50 @@ const words = [
   { word: "blend", ipa: "/blɛnd/", sound: "eh" },
   { word: "grin",  ipa: "/ɡrɪn/",  sound: "ih" },
 ];
-
-function shuffle(a) {
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+function shuffle(a) { for (let i = a.length-1; i>0; i--) { const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+let ttsVoice=null, ttsReady=false;
+function loadVoice() { const v=speechSynthesis.getVoices(); if(!v.length) return; ttsVoice=v.find(x=>x.lang==="en-US"&&/samantha/i.test(x.name))||v.find(x=>x.lang==="en-US"&&/google/i.test(x.name))||v.find(x=>x.lang==="en-US")||v.find(x=>x.lang.startsWith("en"))||null; }
+speechSynthesis.onvoiceschanged=loadVoice; loadVoice();
+function unlockTTS() { if(ttsReady) return; ttsReady=true; const s=new SpeechSynthesisUtterance(''); s.volume=0; speechSynthesis.speak(s); }
+document.addEventListener('touchstart',unlockTTS,{once:true});
+document.addEventListener('click',unlockTTS,{once:true});
+function speak(word,btn) {
+  if(!('speechSynthesis' in window)) return;
+  unlockTTS(); speechSynthesis.cancel();
+  setTimeout(()=>{ const u=new SpeechSynthesisUtterance(word); u.lang="en-US"; u.rate=0.82; u.pitch=1.05; loadVoice(); if(ttsVoice) u.voice=ttsVoice; if(btn){ btn.textContent="🔊"; u.onend=u.onerror=()=>{ btn.textContent="▶"; }; } speechSynthesis.speak(u); },120);
 }
-
-// TTS
-let ttsVoice = null;
-function loadVoice() {
-  const v = speechSynthesis.getVoices();
-  ttsVoice = v.find(x => x.lang === "en-US" && /samantha/i.test(x.name))
-          || v.find(x => x.lang === "en-US" && /google/i.test(x.name))
-          || v.find(x => x.lang === "en-US")
-          || v.find(x => x.lang.startsWith("en"))
-          || null;
-}
-if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = loadVoice;
-loadVoice();
-
-function speak(word, btn) {
-  if (!('speechSynthesis' in window)) return;
-  speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(word);
-  u.lang = "en-US"; u.rate = 0.82; u.pitch = 1.05;
-  if (ttsVoice) u.voice = ttsVoice;
-  if (btn) { btn.textContent = "🔊"; u.onend = u.onerror = () => { btn.textContent = "▶"; }; }
-  speechSynthesis.speak(u);
-}
-
-// State
-let placements = {}; // word -> 'bank'|'ii'|'eh'|'ih'
-let draggingWord = null;
-
-function getZoneEl(zone) {
-  return zone === 'bank'
-    ? document.getElementById('word-bank')
-    : document.querySelector(`.column[data-sound="${zone}"]`);
-}
-
+let placements={}, draggingWord=null;
+function getZoneEl(zone) { return zone==='bank'?document.getElementById('word-bank'):document.querySelector(`.column[data-sound="${zone}"]`); }
 function makeChip(item) {
-  const chip = document.createElement('div');
-  chip.className = 'chip';
-  chip.id = 'chip-' + item.word;
-  chip.draggable = true;
-  chip.dataset.word = item.word;
-
-  const btn = document.createElement('button');
-  btn.className = 'chip-play';
-  btn.title = 'Listen';
-  btn.textContent = '▶';
-  btn.addEventListener('click', e => { e.stopPropagation(); speak(item.word, btn); });
-
-  const lbl = document.createElement('span');
-  lbl.textContent = item.word;
-
-  chip.appendChild(btn);
-  chip.appendChild(lbl);
-
-  chip.addEventListener('dragstart', e => {
-    draggingWord = item.word;
-    setTimeout(() => chip.classList.add('dragging'), 0);
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', item.word);
-  });
-  chip.addEventListener('dragend', () => {
-    chip.classList.remove('dragging');
-    draggingWord = null;
-  });
-
-  // Touch
-  chip.addEventListener('touchstart', touchStart, { passive: false });
-  chip.addEventListener('touchmove',  touchMove,  { passive: false });
-  chip.addEventListener('touchend',   touchEnd,   { passive: false });
-
+  const chip=document.createElement('div'); chip.className='chip'; chip.id='chip-'+item.word; chip.draggable=true; chip.dataset.word=item.word;
+  const btn=document.createElement('button'); btn.className='chip-play'; btn.title='Listen'; btn.textContent='▶';
+  btn.addEventListener('click',e=>{ e.stopPropagation(); speak(item.word,btn); });
+  const lbl=document.createElement('span'); lbl.textContent=item.word;
+  chip.appendChild(btn); chip.appendChild(lbl);
+  chip.addEventListener('dragstart',e=>{ draggingWord=item.word; setTimeout(()=>chip.classList.add('dragging'),0); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',item.word); });
+  chip.addEventListener('dragend',()=>{ chip.classList.remove('dragging'); draggingWord=null; });
+  chip.addEventListener('touchstart',touchStart,{passive:false});
+  chip.addEventListener('touchmove',touchMove,{passive:false});
+  chip.addEventListener('touchend',touchEnd,{passive:false});
   return chip;
 }
-
 function renderAll() {
-  const bank = document.getElementById('word-bank');
-  bank.innerHTML = '';
-  ['ii','eh','ih'].forEach(s => { document.getElementById('zone-' + s).innerHTML = ''; });
-
-  shuffle([...words]).forEach(item => {
-    const zone = placements[item.word] || 'bank';
-    const chip = makeChip(item);
-    if (zone === 'bank') {
-      bank.appendChild(chip);
-    } else {
-      document.getElementById('zone-' + zone).appendChild(chip);
-    }
-  });
-
-  ['ii','eh','ih'].forEach(s => {
-    const z = document.getElementById('zone-' + s);
-    if (!z.children.length) {
-      const ph = document.createElement('div');
-      ph.className = 'col-empty'; ph.textContent = 'Drop here';
-      z.appendChild(ph);
-    }
-  });
-
+  const bank=document.getElementById('word-bank'); bank.innerHTML='';
+  ['ii','eh','ih'].forEach(s=>{ document.getElementById('zone-'+s).innerHTML=''; });
+  shuffle([...words]).forEach(item=>{ const zone=placements[item.word]||'bank'; const chip=makeChip(item); if(zone==='bank') bank.appendChild(chip); else document.getElementById('zone-'+zone).appendChild(chip); });
+  ['ii','eh','ih'].forEach(s=>{ const z=document.getElementById('zone-'+s); if(!z.children.length){ const ph=document.createElement('div'); ph.className='col-empty'; ph.textContent='Drop here'; z.appendChild(ph); } });
   updateStats();
 }
-
-function updateStats() {
-  const placed = Object.values(placements).filter(z => z !== 'bank').length;
-  const correct = words.filter(w => placements[w.word] === w.sound).length;
-  document.getElementById('s-correct').textContent = correct;
-  document.getElementById('s-wrong').textContent   = placed - correct;
-  document.getElementById('s-left').textContent    = words.length - placed;
-}
-
-function onDragOver(e, zone) {
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'move';
-  getZoneEl(zone).classList.add('drag-over');
-}
-function onDragLeave(e, zone) {
-  getZoneEl(zone).classList.remove('drag-over');
-}
-function onDrop(e, zone) {
-  e.preventDefault();
-  const word = e.dataTransfer.getData('text/plain') || draggingWord;
-  getZoneEl(zone).classList.remove('drag-over');
-  if (!word) return;
-  placements[word] = zone;
-  const chip = document.getElementById('chip-' + word);
-  if (chip) chip.classList.remove('correct', 'wrong');
-  document.getElementById('result-banner').classList.remove('show');
-  renderAll();
-}
-
-// Touch drag
-let ghost = null, touchW = null, touchOX = 0, touchOY = 0;
-
-function touchStart(e) {
-  const chip = e.currentTarget;
-  touchW = chip.dataset.word;
-  const t = e.touches[0];
-  const r = chip.getBoundingClientRect();
-  touchOX = t.clientX - r.left;
-  touchOY = t.clientY - r.top;
-  ghost = document.getElementById('drag-ghost');
-  ghost.textContent = chip.querySelector('span').textContent;
-  ghost.style.display = 'block';
-  ghost.style.left = (t.clientX - touchOX) + 'px';
-  ghost.style.top  = (t.clientY - touchOY) + 'px';
-  chip.classList.add('dragging');
-  e.preventDefault();
-}
-
-function touchMove(e) {
-  if (!ghost || !touchW) return;
-  const t = e.touches[0];
-  ghost.style.left = (t.clientX - touchOX) + 'px';
-  ghost.style.top  = (t.clientY - touchOY) + 'px';
-  ['ii','eh','ih'].forEach(s => {
-    const col = document.querySelector(`.column[data-sound="${s}"]`);
-    const r = col.getBoundingClientRect();
-    col.classList.toggle('drag-over',
-      t.clientX >= r.left && t.clientX <= r.right && t.clientY >= r.top && t.clientY <= r.bottom);
-  });
-  const bank = document.getElementById('word-bank');
-  const br = bank.getBoundingClientRect();
-  bank.classList.toggle('drag-over',
-    t.clientX >= br.left && t.clientX <= br.right && t.clientY >= br.top && t.clientY <= br.bottom);
-  e.preventDefault();
-}
-
-function touchEnd(e) {
-  const chip = document.getElementById('chip-' + touchW);
-  if (chip) chip.classList.remove('dragging');
-  if (ghost) ghost.style.display = 'none';
-  const t = e.changedTouches[0];
-  let dropped = false;
-
-  ['ii','eh','ih'].forEach(s => {
-    const col = document.querySelector(`.column[data-sound="${s}"]`);
-    col.classList.remove('drag-over');
-    const r = col.getBoundingClientRect();
-    if (!dropped && t.clientX >= r.left && t.clientX <= r.right && t.clientY >= r.top && t.clientY <= r.bottom) {
-      placements[touchW] = s; dropped = true;
-    }
-  });
-  const bank = document.getElementById('word-bank');
-  bank.classList.remove('drag-over');
-  const br = bank.getBoundingClientRect();
-  if (!dropped && t.clientX >= br.left && t.clientX <= br.right && t.clientY >= br.top && t.clientY <= br.bottom) {
-    placements[touchW] = 'bank'; dropped = true;
-  }
-
-  if (dropped) {
-    if (chip) chip.classList.remove('correct', 'wrong');
-    document.getElementById('result-banner').classList.remove('show');
-    renderAll();
-  }
-  touchW = null;
-  e.preventDefault();
-}
-
-function checkAll() {
-  words.forEach(item => {
-    const chip = document.getElementById('chip-' + item.word);
-    if (!chip) return;
-    const zone = placements[item.word];
-    if (!zone || zone === 'bank') return;
-    chip.classList.remove('correct', 'wrong');
-    chip.classList.add(zone === item.sound ? 'correct' : 'wrong');
-  });
-
-  const placed  = Object.values(placements).filter(z => z !== 'bank').length;
-  const correct = words.filter(w => placements[w.word] === w.sound).length;
-  const pct = words.length > 0 ? Math.round((correct / words.length) * 100) : 0;
-
-  const banner = document.getElementById('result-banner');
-  document.getElementById('result-title').textContent =
-    placed < words.length
-      ? `${correct} correct so far — ${words.length - placed} word(s) still in the bank.`
-      : `${correct} / ${words.length} correct (${pct}%)`;
-  document.getElementById('result-msg').textContent =
-    placed < words.length
-      ? "Drag all words into a column, then check again." :
-    pct === 100 ? "Perfect! Outstanding ear for these vowel contrasts." :
-    pct >= 78   ? "Very good! Move the red-highlighted words and try again." :
-    pct >= 55   ? "Good effort! Focus on the /ɪ/ vs /iː/ contrast — it's tricky!" :
-                  "Keep listening! Replay the words and try rearranging them.";
-  banner.classList.add('show');
-  updateStats();
-}
-
-function resetActivity() {
-  placements = {};
-  document.getElementById('result-banner').classList.remove('show');
-  renderAll();
-}
-
+function updateStats() { const placed=Object.values(placements).filter(z=>z!=='bank').length; const correct=words.filter(w=>placements[w.word]===w.sound).length; document.getElementById('s-correct').textContent=correct; document.getElementById('s-wrong').textContent=placed-correct; document.getElementById('s-left').textContent=words.length-placed; }
+function onDragOver(e,zone) { e.preventDefault(); e.dataTransfer.dropEffect='move'; getZoneEl(zone).classList.add('drag-over'); }
+function onDragLeave(e,zone) { getZoneEl(zone).classList.remove('drag-over'); }
+function onDrop(e,zone) { e.preventDefault(); const word=e.dataTransfer.getData('text/plain')||draggingWord; getZoneEl(zone).classList.remove('drag-over'); if(!word) return; placements[word]=zone; const chip=document.getElementById('chip-'+word); if(chip) chip.classList.remove('correct','wrong'); document.getElementById('result-banner').classList.remove('show'); renderAll(); }
+let ghost=null,touchW=null,touchOX=0,touchOY=0;
+function touchStart(e) { const chip=e.currentTarget; touchW=chip.dataset.word; const t=e.touches[0]; const r=chip.getBoundingClientRect(); touchOX=t.clientX-r.left; touchOY=t.clientY-r.top; ghost=document.getElementById('drag-ghost'); ghost.textContent=chip.querySelector('span').textContent; ghost.style.display='block'; ghost.style.left=(t.clientX-touchOX)+'px'; ghost.style.top=(t.clientY-touchOY)+'px'; chip.classList.add('dragging'); e.preventDefault(); }
+function touchMove(e) { if(!ghost||!touchW) return; const t=e.touches[0]; ghost.style.left=(t.clientX-touchOX)+'px'; ghost.style.top=(t.clientY-touchOY)+'px'; ['ii','eh','ih'].forEach(s=>{ const col=document.querySelector(`.column[data-sound="${s}"]`); const r=col.getBoundingClientRect(); col.classList.toggle('drag-over',t.clientX>=r.left&&t.clientX<=r.right&&t.clientY>=r.top&&t.clientY<=r.bottom); }); const bank=document.getElementById('word-bank'); const br=bank.getBoundingClientRect(); bank.classList.toggle('drag-over',t.clientX>=br.left&&t.clientX<=br.right&&t.clientY>=br.top&&t.clientY<=br.bottom); e.preventDefault(); }
+function touchEnd(e) { const chip=document.getElementById('chip-'+touchW); if(chip) chip.classList.remove('dragging'); if(ghost) ghost.style.display='none'; const t=e.changedTouches[0]; let dropped=false; ['ii','eh','ih'].forEach(s=>{ const col=document.querySelector(`.column[data-sound="${s}"]`); col.classList.remove('drag-over'); const r=col.getBoundingClientRect(); if(!dropped&&t.clientX>=r.left&&t.clientX<=r.right&&t.clientY>=r.top&&t.clientY<=r.bottom){ placements[touchW]=s; dropped=true; } }); const bank=document.getElementById('word-bank'); bank.classList.remove('drag-over'); const br=bank.getBoundingClientRect(); if(!dropped&&t.clientX>=br.left&&t.clientX<=br.right&&t.clientY>=br.top&&t.clientY<=br.bottom){ placements[touchW]='bank'; dropped=true; } if(dropped){ if(chip) chip.classList.remove('correct','wrong'); document.getElementById('result-banner').classList.remove('show'); renderAll(); } touchW=null; e.preventDefault(); }
+function checkAll() { words.forEach(item=>{ const chip=document.getElementById('chip-'+item.word); if(!chip) return; const zone=placements[item.word]; if(!zone||zone==='bank') return; chip.classList.remove('correct','wrong'); chip.classList.add(zone===item.sound?'correct':'wrong'); }); const placed=Object.values(placements).filter(z=>z!=='bank').length; const correct=words.filter(w=>placements[w.word]===w.sound).length; const pct=words.length>0?Math.round((correct/words.length)*100):0; const banner=document.getElementById('result-banner'); document.getElementById('result-title').textContent=placed<words.length?`${correct} correct so far — ${words.length-placed} word(s) still in the bank.`:`${correct} / ${words.length} correct (${pct}%)`; document.getElementById('result-msg').textContent=placed<words.length?"Drag all words into a column, then check again.":pct===100?"Perfect! Outstanding ear for these vowel contrasts.":pct>=78?"Very good! Move the red-highlighted words and try again.":pct>=55?"Good effort! Focus on the /ɪ/ vs /iː/ contrast — it's tricky!":"Keep listening! Replay the words and try rearranging them."; banner.classList.add('show'); updateStats(); }
+function resetActivity() { placements={}; document.getElementById('result-banner').classList.remove('show'); renderAll(); }
 resetActivity();
 </script>
 </body>
